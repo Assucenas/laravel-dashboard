@@ -6,28 +6,38 @@ volumes:
     driver: local
 
 services:
-  laravel-auth-app:
+
+  laravel-app:
+    container_name: laravel-app
+    image: webdevops/php-nginx-dev:8.2
     platform: linux/amd64
-    container_name: ${APP_PHP_SERVICE}
-    image: webdevops/php-nginx-dev:7.3
     working_dir: /var/www/app
     volumes:
       - .:/var/www/app
     ports:
-      - "${APP_PHP_PORT}:80"
+      - "8000:80"
+    environment:
+      - WEB_DOCUMENT_ROOT=/var/www/app/public
     depends_on:
-      - laravel-auth-database
+      - laravel-database
 
-  laravel-auth-database:
-    container_name: ${APP_MYSQL_SERVICE}
-    image: mariadb:10.6
+  laravel-database:
+    container_name: laravel-database
+    image: mysql:5.7
+    platform: linux/amd64
     volumes:
       - laravel-auth-database_data:/var/lib/mysql
     ports:
-      - "${APP_MYSQL_PORT}:3306"
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: laravel
       MYSQL_USER: laravel
       MYSQL_PASSWORD: laravel
+
+
+    
+
+    
+
 
